@@ -95,6 +95,9 @@ def update_profile(profile_path):
 	if "source" in profile:
 		with urlopen(profile["source"]) as response:
 			extern = response.read()
+		if "delimiters" in profile:
+			start, end = profile["delimiters"]
+			extern = extern.partition(start)[2].partition(end)[0]
 		profile = json.loads(extern)
 
 	schedule = []
