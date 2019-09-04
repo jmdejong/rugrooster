@@ -4,6 +4,7 @@ from urllib.request import urlopen
 from datetime import datetime
 from datetime import date as ddate
 from os.path import join
+import os
 import json
 import glob
 
@@ -91,6 +92,12 @@ def update_profile(profile_path):
 
 	with open(profile_path) as f:
 		profile = json.load(f)
+	
+	if "source" in profile:
+		with urlopen(profile["source"]) as response:
+			extern = json.loads(response.read())
+		profile["courses"] = extern["courses"]
+		profile["filter"] = extern["filter"]
 
 	schedule = []
 	for course, year in profile["courses"]:
@@ -108,13 +115,15 @@ def update_profile(profile_path):
 	with open(join("templates", "index.html")) as f:
 		template = f.read()
 		
-	outdir = profile["dir"]
+	outdir = join("html", profile["dir"])
+	
+	os.makedirs(outdir, exist_ok=True)
 
-	with open(join("html", outdir, "full.html"), "w") as of:
+	with open(join(outdir, "full.html"), "w") as of:
 		of.write(template.format(full_text))
-	with open(join("html", outdir, "edit.html"), "w") as of:
+	with open(join(outdir, "edit.html"), "w") as of:
 		of.write(template.format(edit_text))
-	with open(join("html", outdir, "index.html"), "w") as of:
+	with open(join(outdir, "index.html"), "w") as of:
 		of.write(template.format(filtered_text))
 
 def main():
