@@ -29,7 +29,6 @@ class Activity:
 		self.start = datetime(*jsondata.get("start", []))
 		self.end = datetime(*jsondata.get("end", []))
 		activityType = jsondata.get("activityType", {})
-		#print(activityType, type(activityType))
 		self.activityTypeName = _ml(activityType.get("name"))
 		self.activityTypeSyllabusName = activityType.get("syllabusName").strip()
 		self.groups = [_ml(group.get("name")) for group in jsondata.get("groups", [])]
@@ -95,9 +94,8 @@ def update_profile(profile_path):
 	
 	if "source" in profile:
 		with urlopen(profile["source"]) as response:
-			extern = json.loads(response.read())
-		profile["courses"] = extern["courses"]
-		profile["filter"] = extern["filter"]
+			extern = response.read()
+		profile = json.loads(extern)
 
 	schedule = []
 	for course, year in profile["courses"]:
@@ -115,7 +113,7 @@ def update_profile(profile_path):
 	with open(join("templates", "index.html")) as f:
 		template = f.read()
 		
-	outdir = join("html", profile["dir"])
+	outdir = join("html", os.path.basename(profile_path)[:-5])
 	
 	os.makedirs(outdir, exist_ok=True)
 
@@ -129,7 +127,11 @@ def update_profile(profile_path):
 def main():
 	
 	for profile in glob.glob(join("profiles", "*.json")):
-		update_profile(profile)
+		try:
+			update_profile(profile)
+		except Exception as e:
+			print("failed to load", profile)
+			print(type(e), e)
 	
 
 if __name__ == "__main__":
