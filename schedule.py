@@ -87,7 +87,7 @@ def load_course(code, year):
 
 def main():
 
-	with open("profile.json") as f:
+	with open("profiles/troido.json") as f:
 		profile = json.load(f)
 
 	schedule = []
