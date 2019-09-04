@@ -3,7 +3,9 @@
 from urllib.request import urlopen
 from datetime import datetime
 from datetime import date as ddate
+from os.path import join
 import json
+import glob
 
 apiurl = "https://rooster.rug.nl/api/{year}/activity/by/course/{code}"
 
@@ -85,9 +87,9 @@ def load_course(code, year):
 	return json.loads(data)
 	
 
-def main():
+def update_profile(profile_path):
 
-	with open("profiles/troido.json") as f:
+	with open(profile_path) as f:
 		profile = json.load(f)
 
 	schedule = []
@@ -103,15 +105,22 @@ def main():
 	edit_text = make_list(activities, True)
 	filtered_text = make_list(activities, False, True, filters)
 	
-	with open("templates/index.html") as f:
+	with open(join("templates", "index.html")) as f:
 		template = f.read()
+		
+	outdir = profile["dir"]
 
-	with open("html/full.html", "w") as of:
+	with open(join("html", outdir, "full.html"), "w") as of:
 		of.write(template.format(full_text))
-	with open("html/edit.html", "w") as of:
+	with open(join("html", outdir, "edit.html"), "w") as of:
 		of.write(template.format(edit_text))
-	with open("html/index.html", "w") as of:
+	with open(join("html", outdir, "index.html"), "w") as of:
 		of.write(template.format(filtered_text))
+
+def main():
+	
+	for profile in glob.glob(join("profiles", "*.json")):
+		update_profile(profile)
 	
 
 if __name__ == "__main__":
