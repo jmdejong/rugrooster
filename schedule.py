@@ -74,7 +74,7 @@ def make_list(activities, show_id=False, hide_old=False, filters=set()):
 			last_date = date
 		text += activity.inlist("%H:%M")
 		if show_id:
-			text += activity.id
+			text += "  " + activity.id
 		text += "\n"
 	
 	text += "\n\nLast Updated: " + str(datetime.now())
