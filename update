@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd `dirname $0`
+./schedule.py >>stdout.log 2>>stderr.log

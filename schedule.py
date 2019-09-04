@@ -103,8 +103,6 @@ def main():
 	edit_text = make_list(activities, True)
 	filtered_text = make_list(activities, False, True, filters)
 	
-	print(edit_text)
-	
 	with open("templates/index.html") as f:
 		template = f.read()
 
