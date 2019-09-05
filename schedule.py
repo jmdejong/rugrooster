@@ -77,7 +77,7 @@ def make_list(activities, show_id=False, hide_old=False, filters=set()):
 			text += "  " + activity.id
 		text += "\n"
 	
-	text += "\n\nLast Updated: " + str(datetime.now())
+	text += "\n\nLast Updated: " + str(datetime.now()) + " UTC"
 	return text
 
 def load_course(code, year):
