@@ -70,7 +70,9 @@ def make_list(activities, show_id=False, hide_old=False, filters=set()):
 		if activity.id in filters or hide_old and date < ddate.today():
 			continue
 		if date != last_date:
-			text += date.strftime("\n    %A, %d/%m/%y\n")
+			if date.isocalendar()[1] != last_date.isocalendar()[1]:
+				text += "\n---------------- Week " + str(date.isocalendar()[1])
+			text += date.strftime("\n  %a, %d/%m/%y\n")
 			last_date = date
 		text += activity.inlist("%H:%M")
 		if show_id:
